@@ -19,4 +19,4 @@ def home_page(request):
 def view_list(request):
     items = Item.objects.all()
     contexts = {'items': items}
-    return render(request, 'home.html', contexts)
+    return render(request, 'list.html', contexts)
