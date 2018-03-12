@@ -8,11 +8,11 @@ from django.test import LiveServerTestCase
 
 class NewVisionTest(LiveServerTestCase):
     def setUp(self):
-        self.browser  = webdriver.Chrome("driver/chromedriver")
+        self.browser = webdriver.Chrome("driver/chromedriver")
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
-        time.sleep(10)
+        time.sleep(3)
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
@@ -22,6 +22,7 @@ class NewVisionTest(LiveServerTestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get(self.live_server_url)
+        time.sleep(3)
         self.assertIn('To-Do', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
@@ -31,15 +32,9 @@ class NewVisionTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')  # unittest的辅助函数
-
-        table = self.browser.find_element_by_id('id_list_table')
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('Use peacock feathers to make a fly')
-        inputbox.send_keys(Keys.ENTER)
-
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
-        self.fail('Finish the test')
+        self.check_for_row_in_list_table('1: Buy peacock feathers')
+
         self.browser.quit()
         self.browser = webdriver.Chrome("driver/chromedriver")
         self.browser.get(self.live_server_url)
